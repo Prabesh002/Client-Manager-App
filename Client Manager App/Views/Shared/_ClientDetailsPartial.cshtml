@@ -1,0 +1,17 @@
+﻿@model ClientModel
+
+<div class="text-dark">
+    <p><strong>Name:</strong> @Model.Name</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    @if (!string.IsNullOrEmpty(Model.PlatformUrl))
+    {
+        <p><strong>Platform URL:</strong> @Model.PlatformUrl</p>
+    }
+    <p><strong>Time Email Sent:</strong> @Model.TimeEmailSent.ToString("MM/dd/yyyy HH:mm:ss")</p>
+    <p><strong>Is Rejected:</strong> @Model.IsRejected</p>
+    @if (!string.IsNullOrEmpty(Model.MaxOffer))
+    {
+        <p><strong>Max Offer:</strong> @Model.MaxOffer</p>
+    }
+    <p><strong>Client Type:</strong> @Model.ClientType</p>
+</div>

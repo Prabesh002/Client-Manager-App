@@ -1,0 +1,70 @@
+﻿@model Client_Manager_App.Entities.ClientModel
+
+@{
+    ViewData["Title"] = "Edit Client";
+}
+
+<div class="container ">
+   
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <h1>Edit Client</h1>
+                <div class="form-group">
+                    <label asp-for="Name" class="font-weight-bold">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="font-weight-bold">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PlatformUrl" class="font-weight-bold">Platform URL</label>
+                    <input asp-for="PlatformUrl" class="form-control" />
+                    <span asp-validation-for="PlatformUrl" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TimeEmailSent" class="font-weight-bold">Time Email Sent</label>
+                    <input asp-for="TimeEmailSent" class="form-control" />
+                    <span asp-validation-for="TimeEmailSent" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="IsRejected" class="font-weight-bold">Is Rejected</label>
+                    <input asp-for="IsRejected" class="form-check-input" />
+                    <span asp-validation-for="IsRejected" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MaxOffer" class="font-weight-bold">Max Offer</label>
+                    <input asp-for="MaxOffer" class="form-control" />
+                    <span asp-validation-for="MaxOffer" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ClientType" class="font-weight-bold">Client Type</label>
+                    <select asp-for="ClientType" class="form-control">
+                        <option value="">Select Client Type</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                    <span asp-validation-for="ClientType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

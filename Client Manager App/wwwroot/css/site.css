@@ -1,0 +1,86 @@
+
+html, body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e1e;
+    color: #ffffff; 
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+
+.navbar {
+    background-color: #000000; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #ffffff; 
+}
+
+.nav-link {
+    color: #ffffff; 
+}
+
+    .nav-link:hover {
+        color: #e9ecef; 
+    }
+
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #000000; 
+    color: #ffffff; 
+    padding: 20px 0;
+}
+
+    .footer a {
+        color: #ffffff; 
+    }
+
+        .footer a:hover {
+            color: #e9ecef;
+        }
+
+
+.table {
+    color: #ffffff; 
+}
+
+    .table th, .table td {
+        border-color: #ffffff; 
+    }
+
+
+p, ul, ol, table {
+    margin: 0;
+    padding: 0;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
