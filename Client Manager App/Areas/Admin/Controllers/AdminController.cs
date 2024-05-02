@@ -1,6 +1,7 @@
 ﻿using Client_Manager_App.AppDb;
 using Client_Manager_App_Models;
 using Microsoft.AspNetCore.Mvc;
+using Client_Manager_Repository.Interfaces;
 
 namespace Client_Manager_App.Areas.Admin.Controllers
 {
@@ -8,17 +9,27 @@ namespace Client_Manager_App.Areas.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly AppDatabase _context;
-
-        public AdminController(AppDatabase context)
+        private readonly IClientRepository _clientRepository;
+        public AdminController(AppDatabase context , IClientRepository clientRepository)
         {
             _context = context;
+            _clientRepository = clientRepository;
         }
 
-        public IActionResult Client()
+        public IActionResult Client(string searchTerm)
         {
-            var clients = _context.Clients.ToList();
-            return View(clients);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var clients = _clientRepository.SearchClientsAsync(searchTerm).Result; 
+                return View(clients);
+            }
+            else
+            {
+                var clients = _clientRepository.GetAllClientsAsync().Result;
+                return View(clients);
+            }
         }
+
         public IActionResult Create()
         {
             return View();

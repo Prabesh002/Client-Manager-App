@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Client-Manager-App-Models\Client_Manager_App_Models.csproj" />
     <ProjectReference Include="..\Client_Manager_App_Database\Client_Manager_App_Database.csproj" />
+	
   </ItemGroup>
 
   <ItemGroup>
