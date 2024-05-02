@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-namespace Client_Manager_App.Entities
+using System.ComponentModel;
+namespace Client_Manager_App_Models
 {
     public enum ClientType
     {
@@ -26,7 +26,7 @@ namespace Client_Manager_App.Entities
 
         public string? MaxOffer {  get; set; }
 
-        public ClientType? ClientType { get; set; } = Entities.ClientType.empty;
+        public ClientType? ClientType { get; set; } = Client_Manager_App_Models.ClientType.empty;
         
     }
 }

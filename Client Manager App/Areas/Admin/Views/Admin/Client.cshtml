@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Client_Manager_App.Entities.ClientModel>
+﻿@model IEnumerable<Client_Manager_App_Models.ClientModel>
 
 @{
     ViewData["Title"] = "Client Management";
@@ -23,8 +23,8 @@
                             <p class="card-text text-dark"><strong>Max Offer:</strong> @client.MaxOffer</p>
                             <p class="card-text text-dark"><strong>Client Type:</strong> @client.ClientType</p>
                             <div class="text-center">
-                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@client.Id" class="btn btn-primary">Edit</a>
-                                <a href="#" class="btn btn-danger delete-client-btn" data-client-id="@client.Id">Delete</a>
+                                <a asp-area="Admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@client.Id" class="btn btn-primary">Edit</a>
+                                <a asp-controller="Admin" class="btn btn-danger delete-client-btn" data-client-id="@client.Id">Delete</a>
 
                             </div>
                         </div>
@@ -38,7 +38,7 @@
         <p>No clients found.</p>
     }
 
-    <a asp-controller="Home" asp-action="Create" class="btn btn-success btn-lg btn-block mt-4">Create New Client</a>
+    <a asp-controller="Admin" asp-action="Create" class="btn btn-success btn-lg btn-block mt-4">Create New Client</a>
 </div>
 
 <script>
@@ -48,9 +48,10 @@
             var clientId = $(this).data('client-id');
             var confirmDelete = confirm("Are you sure you want to delete this client?");
             if (confirmDelete) {
-                // If user confirms, redirect to the delete action
-                window.location.href = "/Home/Delete?id=" + clientId;
+                var url = '@Url.Action("Delete", "Admin")' + '?id=' + clientId;
+                window.location.href = url;
             }
         });
     });
+
 </script>

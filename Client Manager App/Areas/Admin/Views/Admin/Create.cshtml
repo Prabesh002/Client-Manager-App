@@ -1,4 +1,4 @@
-﻿@model Client_Manager_App.Entities.ClientModel
+﻿@model Client_Manager_App_Models.ClientModel
 
 @{
     ViewData["Title"] = "Create Client";
@@ -50,7 +50,7 @@
                     <label asp-for="ClientType" class="font-weight-bold">Client Type</label>
                     <select asp-for="ClientType" class="form-control">
                         <option value="">Select Client Type</option>
-                        @foreach (var clientType in Enum.GetValues(typeof(Client_Manager_App.Entities.ClientType)))
+                        @foreach (var clientType in Enum.GetValues(typeof(Client_Manager_App_Models.ClientType)))
                         {
                             <option value="@clientType">@clientType</option>
                         }
