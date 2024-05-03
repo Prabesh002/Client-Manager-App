@@ -43,6 +43,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                 client.TimeEmailSent = client.TimeEmailSent.ToUniversalTime();
                 _context.Clients.Add(client);
                 _context.SaveChanges();
+                TempData["Success"] = $"{client.Name} was added successfully!";
                 return RedirectToAction("Client");
             }
             return View(client);
