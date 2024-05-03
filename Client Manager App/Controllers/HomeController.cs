@@ -1,10 +1,8 @@
 using Client_Manager_App.Models;
+using Client_Manager_App_Database.AppDb;
+using Client_manager_Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-
-using Microsoft.EntityFrameworkCore;
-using Client_Manager_App_Models;
-using Client_Manager_App.AppDb;
 
 namespace Client_Manager_App.Controllers
 {
@@ -13,10 +11,12 @@ namespace Client_Manager_App.Controllers
         private readonly ILogger<HomeController> _logger;
         
         private readonly AppDatabase _context;
+        private readonly IClientRepository _clientRepository;
 
-        public HomeController(AppDatabase context)
+        public HomeController(AppDatabase context, IClientRepository clientRepository)
         {
             _context = context;
+            _clientRepository = clientRepository;
         }
 
         public IActionResult GetClientDetails(int id)
@@ -28,10 +28,19 @@ namespace Client_Manager_App.Controllers
 
       
 
-        public IActionResult Index()
+        public IActionResult Index(string searchTerm)
         {
-            var clients = _context.Clients.ToList();
-            return View(clients);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var clients = _clientRepository.SearchClientsAsync(searchTerm).Result;
+                return View(clients);
+            }
+            else
+            {
+                var clients = _context.Clients.ToList();
+                return View(clients);
+            }
+            
         }
 
         

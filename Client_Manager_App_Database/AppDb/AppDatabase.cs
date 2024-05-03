@@ -1,7 +1,6 @@
-﻿using Client_Manager_App;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Client_Manager_App_Models;
-namespace Client_Manager_App.AppDb
+namespace Client_Manager_App_Database.AppDb
 {
     public class AppDatabase : DbContext
     {

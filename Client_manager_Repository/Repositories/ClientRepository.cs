@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Client_Manager_App.AppDb;
+using Client_Manager_App_Database.AppDb;
 using Client_Manager_App_Models;
 using Client_manager_Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;

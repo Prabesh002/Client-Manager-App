@@ -1,7 +1,7 @@
-﻿using Client_Manager_App.AppDb;
+﻿using Client_Manager_App_Database.AppDb;
 using Client_Manager_App_Models;
+using Client_manager_Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Client_Manager_Repository.Interfaces;
 
 namespace Client_Manager_App.Areas.Admin.Controllers
 {
@@ -71,6 +71,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                 client.TimeEmailSent = client.TimeEmailSent.ToUniversalTime();
                 _context.Update(client);
                 _context.SaveChanges();
+                TempData["Success"] = "Data Updated sucessfully";
                 return RedirectToAction("Client");
             }
             return View(client);

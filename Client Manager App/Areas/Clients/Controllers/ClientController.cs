@@ -1,4 +1,4 @@
-﻿using Client_Manager_App.AppDb;
+﻿using Client_Manager_App_Database.AppDb;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client_Manager_App.Areas.Clients.Controllers

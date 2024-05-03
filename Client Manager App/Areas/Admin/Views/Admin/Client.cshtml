@@ -13,6 +13,9 @@
     }
 </style>
 
+
+
+
 @using (Html.BeginForm("Client", "Admin", FormMethod.Get))
 {
     <div class="input-group mb-3">
@@ -22,15 +25,43 @@
         </div>
     </div>
 }
+@if (TempData["Success"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#responseModal').modal('show');
+        });
+    </script>
+}
 
+<div class="modal" id="responseModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Response</h5>
+                <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+                    
+                </button>
+            </div>
+            <div class="modal-body">
+                <p  class="text-dark">@TempData["Success"]</p>
+            </div>
+            <div class="modal-footer">
+             
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="container">
+   
     <h1>Client Management</h1>
-
+    
     @if (Model != null && Model.Any())
     {
         <div class="row equal-height-cards">
+           
             @foreach (var client in Model)
             {
                 <div class="col-md-4 mb-4">
