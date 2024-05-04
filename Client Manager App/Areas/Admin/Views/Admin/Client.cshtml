@@ -4,17 +4,37 @@
     ViewData["Title"] = "Client Management";
 }
 <style>
-    .equal-height-cards .card {
+   .equal-height-cards {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; /* Spread cards evenly across the row */
     }
 
-    .equal-height-cards .card-body {
-        flex: 1;
+    .card {
+        width: calc(33.3333% - 20px); /* Adjust for margin */
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        margin-top: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style>
-
-
-
 
 @using (Html.BeginForm("Client", "Admin", FormMethod.Get))
 {
@@ -72,33 +92,27 @@
 
 
 <div class="container">
-
     <h1>Client Management</h1>
 
     @if (Model != null && Model.Any())
     {
         <div class="row equal-height-cards">
-
             @foreach (var client in Model)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title text-dark">@client.Name</h5>
-                            <p class="card-text text-dark"><strong>Email:</strong> @client.Email</p>
-                            <p class="card-text text-dark"><strong>Platform URL:</strong> @client.PlatformUrl</p>
-                            <p class="card-text text-dark"><strong>Time Email Sent:</strong>
-                                @client.TimeEmailSent.ToNepalTime().ToString("yyyy-MM-dd HH:mm:ss")</p>
-                            <p class="card-text text-dark"><strong>Is Rejected:</strong> @(client.IsRejected ? "Yes" : "No")</p>
-                            <p class="card-text text-dark"><strong>Max Offer:</strong> @client.MaxOffer</p>
-                            <p class="card-text text-dark"><strong>Client Type:</strong> @client.ClientType</p>
-                            <div class="mt-auto text-center">
-                                <a asp-area="Admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@client.Id"
-                                    class="btn btn-primary">Edit</a>
-                                <a asp-controller="Admin" class="btn btn-danger delete-client-btn"
-                                    data-client-id="@client.Id">Delete</a>
-                            </div>
-                        </div>
+                <div class="card">
+                    <h5 class="card-title text-dark">@client.Name</h5>
+                    <p class="card-text text-dark">@Html.DisplayFor(modelItem => client.Email)</p>
+                    <p class="card-text text-dark"><strong>Platform URL:</strong> @client.PlatformUrl</p>
+                    <p class="card-text text-dark"><strong>Time Email Sent:</strong>
+                        @client.TimeEmailSent.ToNepalTime().ToString("yyyy-MM-dd HH:mm:ss")</p>
+                    <p class="card-text text-dark"><strong>Is Rejected:</strong> @(client.IsRejected ? "Yes" : "No")</p>
+                    <p class="card-text text-dark"><strong>Max Offer:</strong> @client.MaxOffer</p>
+                    <p class="card-text text-dark"><strong>Client Type:</strong> @client.ClientType</p>
+                    <div class="text-center">
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@client.Id"
+                            class="btn btn-primary">Edit</a>
+                        <a asp-controller="Admin" class="btn btn-danger delete-client-btn"
+                            data-client-id="@client.Id">Delete</a>
                     </div>
                 </div>
             }
@@ -123,5 +137,5 @@
             }
         });
     });
-   
+
 </script>

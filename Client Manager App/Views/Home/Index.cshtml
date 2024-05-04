@@ -4,6 +4,34 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .card {
+        width: calc(50%); /* Adjust for margin */
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        margin-top: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
 
 <div class="container">
     <h1 class="text-center mt-5 mb-4">Welcome</h1>
@@ -31,12 +59,8 @@
             </div>
         </div>
     }
-
-
-
-
     <div class="row justify-content-center">
-        @if(Model != null && Model.Any())
+        @if (Model != null && Model.Any())
         {
             @foreach (var client in Model)
             {
@@ -68,10 +92,9 @@
         }
         else
         {
-            <p>No clients found.</p>
+            <p class="col-md-12 text-center">No clients found.</p>
         }
     </div>
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="clientDetailsModal" tabindex="-1" role="dialog" aria-labelledby="clientDetailsModalLabel" aria-hidden="true">

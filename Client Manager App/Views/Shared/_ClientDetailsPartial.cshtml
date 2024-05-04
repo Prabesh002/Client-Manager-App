@@ -1,5 +1,23 @@
 ﻿@model Client_Manager_App_Models.ClientModel
 
+<style>
+    .modal-body {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+        .modal-body p {
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+            .modal-body p strong {
+                font-weight: bold;
+            }
+</style>
+
 <div class="text-dark">
     <p><strong>Name:</strong> @Model.Name</p>
     <p><strong>Email:</strong> @Model.Email</p>
