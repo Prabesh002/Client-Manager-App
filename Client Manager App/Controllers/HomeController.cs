@@ -10,7 +10,7 @@ namespace Client_Manager_App.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        
+
         private readonly AppDatabase _context;
         private readonly IClientRepository _clientRepository;
 
@@ -27,19 +27,18 @@ namespace Client_Manager_App.Controllers
         }
 
 
-      
 
-        public async  Task<IActionResult> Index(string searchTerm, string filterBy, string clientType)
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchTerm, string filterBy, string clientType, string sortBy)
         {
             List<ClientModel> clients;
 
-            // Check if client type filter is selected
             if (!string.IsNullOrEmpty(clientType))
             {
-                // Convert client type string to enum
+               
                 if (Enum.TryParse(clientType, out ClientType type))
                 {
-                    // Filter clients by client type
+                   
                     clients = await _clientRepository.GetClientsByTypeAsync(type);
                 }
                 else
@@ -50,15 +49,42 @@ namespace Client_Manager_App.Controllers
             }
             else
             {
-
-                clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                // Apply sorting if specified
+                switch (sortBy)
+                {
+                    case "timeEmailSentDesc":
+                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                        clients = clients.OrderByDescending(c => c.TimeEmailSent).ToList();
+                        break;
+                    case "timeEmailSentAsc":
+                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                        clients = clients.OrderBy(c => c.TimeEmailSent).ToList();
+                        break;
+                    case "maxOfferAsc":
+                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                        clients = clients.OrderBy(c => c.MaxOffer).ToList();
+                        break;
+                    case "maxOfferDesc":
+                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                        clients = clients.OrderByDescending(c => c.MaxOffer).ToList();
+                        break;
+                    case "newestUpdated":
+                        clients = await _clientRepository.GetClientsSortedByNewestUpdatedAsync();
+                        break;
+                    case "oldestUpdated":
+                        clients = await _clientRepository.GetClientsSortedByOldestUpdatedAsync();
+                        break;
+                    default:
+                     
+                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                        break;
+                }
             }
 
             return View(clients);
-
         }
 
-        
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

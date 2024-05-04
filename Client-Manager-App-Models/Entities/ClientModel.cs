@@ -27,6 +27,8 @@ namespace Client_Manager_App_Models
         public string? MaxOffer {  get; set; }
 
         public ClientType? ClientType { get; set; } = Client_Manager_App_Models.ClientType.empty;
+
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
         
     }
 }

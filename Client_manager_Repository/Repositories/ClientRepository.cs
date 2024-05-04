@@ -64,5 +64,36 @@ namespace Client_Manager_Repository.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<List<ClientModel>> GetClientsSortedByTimeEmailSentDescAsync()
+        {
+            return await _context.Clients.OrderByDescending(client => client.TimeEmailSent).ToListAsync();
+        }
+
+        public async Task<List<ClientModel>> GetClientsSortedByTimeEmailSentAscAsync()
+        {
+            return await _context.Clients.OrderBy(client => client.TimeEmailSent).ToListAsync();
+        }
+
+        public async Task<List<ClientModel>> GetClientsSortedByMaxOfferAscAsync()
+        {
+            return await _context.Clients.OrderBy(client => client.MaxOffer).ToListAsync();
+        }
+
+        public async Task<List<ClientModel>> GetClientsSortedByMaxOfferDescAsync()
+        {
+            return await _context.Clients.OrderByDescending(client => client.MaxOffer).ToListAsync();
+        }
+
+        public async Task<List<ClientModel>> GetClientsSortedByNewestUpdatedAsync()
+        {
+            return await _context.Clients.OrderByDescending(client => client.LastUpdated).ToListAsync();
+        }
+
+        public async Task<List<ClientModel>> GetClientsSortedByOldestUpdatedAsync()
+        {
+            return await _context.Clients.OrderBy(client => client.LastUpdated).ToListAsync();
+        }
+
+
     }
 }

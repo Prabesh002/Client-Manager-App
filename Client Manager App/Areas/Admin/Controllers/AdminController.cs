@@ -58,6 +58,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 client.TimeEmailSent = client.TimeEmailSent.ToUniversalTime();
+                client.LastUpdated = client.LastUpdated.ToUniversalTime();
                 _context.Clients.Add(client);
                 _context.SaveChanges();
                 TempData["Success"] = $"{client.Name} was added successfully!";
@@ -87,6 +88,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 client.TimeEmailSent = client.TimeEmailSent.ToUniversalTime();
+                 client.LastUpdated = client.LastUpdated.ToUniversalTime();
                 _context.Update(client);
                 _context.SaveChanges();
                 TempData["Success"] = "Data Updated sucessfully";

@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Client_Manager_App.Migrations
+namespace Client_Manager_App_Database.Migrations
 {
     /// <inheritdoc />
-    public partial class innit : Migration
+    public partial class YourMigrationName : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,8 @@ namespace Client_Manager_App.Migrations
                     TimeEmailSent = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsRejected = table.Column<bool>(type: "boolean", nullable: false),
                     MaxOffer = table.Column<string>(type: "text", nullable: true),
-                    ClientType = table.Column<int>(type: "integer", nullable: true)
+                    ClientType = table.Column<int>(type: "integer", nullable: true),
+                    LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
