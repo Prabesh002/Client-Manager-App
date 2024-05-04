@@ -5,7 +5,7 @@
 }
 
 <div class="container">
-    
+
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <form asp-action="Create" method="post">
@@ -21,9 +21,8 @@
                     <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-
                 <div class="form-group">
-                    <label asp-for="PlatformUrl" class="font-weight-bold">Platform URL</label>
+                    <label asp-for="PlatformUrl" class="font-weight-bold">Platform Url</label>
                     <input asp-for="PlatformUrl" class="form-control" />
                     <span asp-validation-for="PlatformUrl" class="text-danger"></span>
                 </div>
@@ -56,6 +55,60 @@
                         }
                     </select>
                     <span asp-validation-for="ClientType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReWorkingRate" class="font-weight-bold">Re-Working Rate</label>
+                    <input asp-for="ReWorkingRate" class="form-control" />
+                    <span asp-validation-for="ReWorkingRate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Gender" class="font-weight-bold">Gender</label>
+                    <select asp-for="Gender" class="form-control">
+                        <option value="">Select Gender</option>
+                        @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                        {
+                            <option value="@gender">@gender</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Country" class="font-weight-bold">Country</label>
+                    <select asp-for="Country" class="form-control">
+                        <option value="">Select Country</option>
+                        @foreach (var country in Enum.GetValues(typeof(Country)))
+                        {
+                            <option value="@country">@country</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EditingType" class="font-weight-bold">Editing Type</label>
+                    <input asp-for="EditingType" class="form-control" />
+                    <span asp-validation-for="EditingType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="IsScammer" class="font-weight-bold">Is Scammer</label>
+                    <input asp-for="IsScammer" class="form-check-input" />
+                    <span asp-validation-for="IsScammer" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="HasAgency" class="font-weight-bold">Has Agency</label>
+                    <input asp-for="HasAgency" class="form-check-input" />
+                    <span asp-validation-for="HasAgency" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PaymentType" class="font-weight-bold">Payment Type</label>
+                    <input asp-for="PaymentType" class="form-control" />
+                    <span asp-validation-for="PaymentType" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">

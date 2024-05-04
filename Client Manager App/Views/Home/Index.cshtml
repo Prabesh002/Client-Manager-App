@@ -12,6 +12,11 @@
         /* Negative margin to offset padding */
     }
 
+    #reworkingRateFilter::-webkit-slider-thumb {
+        background-color: #007bff;
+    }
+
+
     .card {
         flex: 0 0 calc(50% - 20px);
         /* Adjust for margin */
@@ -84,10 +89,74 @@
             </select>
         </div>
     }
+
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        <div class="modal fade" id="advancedFiltersModal" tabindex="-1" aria-labelledby="advancedFiltersModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="advancedFiltersModalLabel">Advanced Filters</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form name="advancedFiltersForm">
+                            <div class="mb-3">
+                                <label for="countryFilter" class="form-label text-dark">Country</label>
+                                <select id="countryFilter" name="countryFilter" class="form-select">
+                                    <option value="">Select Country...</option>
+                                    @foreach (var Countries in Enum.GetValues(typeof(Country)))
+                                    {
+                                        <option value="@Countries">@Countries</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="genderFilter" class="form-label text-dark">Gender</label>
+                                <select id="genderFilter" name="genderFilter" class="form-select">
+                                    <option value="">Select Gender...</option>
+                                    @foreach (var Gender in Enum.GetValues(typeof(Client_Manager_App_Models.Gender)))
+                                    {
+                                        <option value="@Gender">@Gender</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="scammerFilter" name="scammerFilter" value="true">
+                                <label class="form-check-label text-dark" for="scammerFilter">Is Scammer</label>
+                                <input type="hidden" name="scammerFilter" value="false"> <!-- Hidden field for unchecked state -->
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="hasAgencyFilter" name="hasAgencyFilter" value="true">
+                                <label class="form-check-label text-dark" for="hasAgencyFilter">Has Agency</label>
+                                <input type="hidden" name="hasAgencyFilter" value="false"> <!-- Hidden field for unchecked state -->
+                            </div>
+                            <div class="mb-3">
+                                <label for="paymentTypeFilter" class="form-label text-dark">Payment Type</label>
+                                <input type="text" class="form-control" id="paymentTypeFilter" name="paymentTypeFilter">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editingTypeFilter" class="form-label text-dark">Editing Type</label>
+                                <input type="text" class="form-control" id="editingTypeFilter" name="editingTypeFilter">
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                        <button type="button" class="btn btn-primary" id="applyFiltersBtn">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#advancedFiltersModal">
+        Advanced Filters
+    </button>
+
     <div class="row justify-content-center">
-
-
-
         @if (Model != null && Model.Any())
         {
             @foreach (var client in Model)
@@ -143,6 +212,26 @@
     </div>
 
     <script>
+
+        document.getElementById('scammerFilter').addEventListener('change', function () {
+            document.querySelector('input[name="scammerFilter"]').value = this.checked ? "true" : "false";
+        });
+
+        document.getElementById('hasAgencyFilter').addEventListener('change', function () {
+            document.querySelector('input[name="hasAgencyFilter"]').value = this.checked ? "true" : "false";
+        });
+        var reworkRate = null;
+        function updateValue(value) {
+            if (value === 0) {
+                reworkRate = null; // Set value to null if slider is at 0
+            } else {
+                reworkRate = value; 
+            }
+            document.getElementById('sliderText').textContent = reworkRate !== null ? reworkRate : 'No Value'; 
+            const percent = (value - 1) / (100 - 1) * 100;
+            
+        }
+
         $(document).ready(function () {
             $('.view-details-btn').click(function () {
                 var clientId = $(this).data('client-id');
@@ -158,7 +247,11 @@
             });
 
             $('#sortBy').change(function () {
-                console.log("Sort by changed"); // Add this line
+                console.log("Sort by changed");
+                $(this).closest('form').submit();
+            });
+            $('#applyFiltersBtn').click(function () {
+              
                 $(this).closest('form').submit();
             });
         });

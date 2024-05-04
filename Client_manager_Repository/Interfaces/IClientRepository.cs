@@ -15,6 +15,13 @@ namespace Client_manager_Repository.Interfaces
         Task<List<ClientModel>> GetClientsSortedByMaxOfferDescAsync();
         Task<List<ClientModel>> GetClientsSortedByNewestUpdatedAsync();
         Task<List<ClientModel>> GetClientsSortedByOldestUpdatedAsync();
+        Task<List<ClientModel>> GetClientsByCountryAsync(Country country);
+        Task<List<ClientModel>> GetClientsByGenderAsync(Gender gender);
+        Task<List<ClientModel>> GetClientsByEditingTypeAsync(string editingType);
+        Task<List<ClientModel>> GetScammerClientsAsync();
+        Task<List<ClientModel>> GetClientsWithAgencyAsync();
+        Task<List<ClientModel>> GetClientsByPaymentTypeAsync(string paymentType);
+        Task<List<ClientModel>> GetClientsByReWorkingRateAsync(string reWorkingRate);
     }
 
 

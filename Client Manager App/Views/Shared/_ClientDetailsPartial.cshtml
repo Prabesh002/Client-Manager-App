@@ -27,10 +27,17 @@
     }
     <p><strong>Time Email Sent:</strong> @Model.TimeEmailSent.ToString("MM/dd/yyyy HH:mm:ss")</p>
     <p><strong>Last Updated:</strong> @Model.LastUpdated.ToString("MM/dd/yyyy HH:mm:ss")</p>
-    <p><strong>Is Rejected:</strong> @Model.IsRejected</p>
+    <p><strong>Is Rejected:</strong>@(Model.IsRejected ? "Yes" : "No")</p>
     @if (!string.IsNullOrEmpty(Model.MaxOffer))
     {
         <p><strong>Max Offer:</strong> @Model.MaxOffer</p>
     }
     <p><strong>Client Type:</strong> @Model.ClientType</p>
+    <p><strong>Return Rate:</strong> @Model.ReWorkingRate</p>
+    <p><strong>Gender:</strong> @Model.Gender</p>
+    <p><strong>Country:</strong> @Model.Country</p>
+    <p><strong>Editing Type:</strong> @Model.EditingType</p>
+    <p><strong>Is Scammer:</strong>  @(Model.IsScammer ? "Yes" : "No")</p>
+    <p><strong>Agency:</strong>  @(Model.HasAgency ? "Yes" : "No")</p>
+    <p><strong>Payment Type:</strong> @Model.PaymentType</p>
 </div>
