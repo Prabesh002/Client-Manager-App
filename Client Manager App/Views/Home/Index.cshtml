@@ -11,12 +11,24 @@
     @using (Html.BeginForm("Index", "Home", FormMethod.Get))
     {
         <div class="input-group mb-3">
-            <input class="form-control py-2 border-right-0 border" type="search" name="searchTerm" id="example-search-input" placeholder="Search Clients...">
-            <span class="input-group-append">
-                <button class="btn btn-outline-secondary border-left-0 border" type="submit">
-                    Search
-                </button>
-            </span>
+            <input type="text" name="searchTerm" id="searchTerm" class="form-control" placeholder="Search clients"
+                   aria-label="Search clients">
+            <select name="filterBy" id="filterBy" class="form-control">
+                <option value="">Filter by...</option>
+                <option value="Name">Name</option>
+                <option value="Email">Email</option>
+                <option value="MaxOffer">Max Offer</option>
+            </select>
+            <select name="ClientType" id="ClientType" class="form-control">
+                <option value="">Client Type</option>
+                @foreach (var clientType in Enum.GetValues(typeof(Client_Manager_App_Models.ClientType)))
+                {
+                    <option value="@clientType">@clientType</option>
+                }
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
         </div>
     }
 

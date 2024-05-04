@@ -1,5 +1,6 @@
 using Client_Manager_App.Models;
 using Client_Manager_App_Database.AppDb;
+using Client_Manager_App_Models;
 using Client_manager_Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -28,19 +29,33 @@ namespace Client_Manager_App.Controllers
 
       
 
-        public IActionResult Index(string searchTerm)
+        public async  Task<IActionResult> Index(string searchTerm, string filterBy, string clientType)
         {
-            if (!string.IsNullOrEmpty(searchTerm))
+            List<ClientModel> clients;
+
+            // Check if client type filter is selected
+            if (!string.IsNullOrEmpty(clientType))
             {
-                var clients = _clientRepository.SearchClientsAsync(searchTerm).Result;
-                return View(clients);
+                // Convert client type string to enum
+                if (Enum.TryParse(clientType, out ClientType type))
+                {
+                    // Filter clients by client type
+                    clients = await _clientRepository.GetClientsByTypeAsync(type);
+                }
+                else
+                {
+                    // Handle invalid client type
+                    clients = new List<ClientModel>();
+                }
             }
             else
             {
-                var clients = _context.Clients.ToList();
-                return View(clients);
+
+                clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
             }
-            
+
+            return View(clients);
+
         }
 
         

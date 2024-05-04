@@ -33,5 +33,36 @@ namespace Client_Manager_Repository.Repositories
                 .Where(client => client.Name.Contains(searchTerm))
                 .ToListAsync();
         }
+
+        public async Task<List<ClientModel>> GetClientsByTypeAsync(ClientType type)
+        {
+            return await _context.Clients.Where(c => c.ClientType == type).ToListAsync();
+        }
+
+        public async Task<List<ClientModel>> GetFilteredClientsAsync(string searchTerm, string filterBy)
+        {
+            IQueryable<ClientModel> query = _context.Clients;
+
+            if (!string.IsNullOrEmpty(searchTerm) && !string.IsNullOrEmpty(filterBy))
+            {
+                switch (filterBy)
+                {
+                    case "Name":
+                        query = query.Where(c => c.Name.Contains(searchTerm));
+                        break;
+                    case "Email":
+                        query = query.Where(c => c.Email.Contains(searchTerm));
+                        break;
+                    case "MaxOffer":
+                        query = query.Where(c => c.MaxOffer.Contains(searchTerm));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return await query.ToListAsync();
+        }
+
     }
 }

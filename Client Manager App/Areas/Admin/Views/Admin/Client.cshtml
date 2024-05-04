@@ -19,12 +19,29 @@
 @using (Html.BeginForm("Client", "Admin", FormMethod.Get))
 {
     <div class="input-group mb-3">
-        <input type="text" name="searchTerm" class="form-control" placeholder="Search clients" aria-label="Search clients">
+        <input type="text" name="searchTerm" id="searchTerm" class="form-control" placeholder="Search clients"
+            aria-label="Search clients">
+        <select name="filterBy" id="filterBy" class="form-control">
+            <option value="">Filter by...</option>
+            <option value="Name">Name</option>
+            <option value="Email">Email</option>
+            <option value="MaxOffer">Max Offer</option>
+        </select>
+        <select name="ClientType" id="ClientType" class="form-control">
+            <option value="">Client Type</option>
+            @foreach (var clientType in Enum.GetValues(typeof(Client_Manager_App_Models.ClientType)))
+            {
+                <option value="@clientType">@clientType</option>
+            }
+        </select>
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="submit">Search</button>
         </div>
     </div>
 }
+
+
+
 @if (TempData["Success"] != null)
 {
     <script>
@@ -40,14 +57,14 @@
             <div class="modal-header">
                 <h5 class="modal-title text-dark">Response</h5>
                 <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-                    
+
                 </button>
             </div>
             <div class="modal-body">
-                <p  class="text-dark">@TempData["Success"]</p>
+                <p class="text-dark">@TempData["Success"]</p>
             </div>
             <div class="modal-footer">
-             
+
             </div>
         </div>
     </div>
@@ -55,13 +72,13 @@
 
 
 <div class="container">
-   
+
     <h1>Client Management</h1>
-    
+
     @if (Model != null && Model.Any())
     {
         <div class="row equal-height-cards">
-           
+
             @foreach (var client in Model)
             {
                 <div class="col-md-4 mb-4">
@@ -70,13 +87,16 @@
                             <h5 class="card-title text-dark">@client.Name</h5>
                             <p class="card-text text-dark"><strong>Email:</strong> @client.Email</p>
                             <p class="card-text text-dark"><strong>Platform URL:</strong> @client.PlatformUrl</p>
-                            <p class="card-text text-dark"><strong>Time Email Sent:</strong> @client.TimeEmailSent.ToNepalTime().ToString("yyyy-MM-dd HH:mm:ss")</p>
+                            <p class="card-text text-dark"><strong>Time Email Sent:</strong>
+                                @client.TimeEmailSent.ToNepalTime().ToString("yyyy-MM-dd HH:mm:ss")</p>
                             <p class="card-text text-dark"><strong>Is Rejected:</strong> @(client.IsRejected ? "Yes" : "No")</p>
                             <p class="card-text text-dark"><strong>Max Offer:</strong> @client.MaxOffer</p>
                             <p class="card-text text-dark"><strong>Client Type:</strong> @client.ClientType</p>
                             <div class="mt-auto text-center">
-                                <a asp-area="Admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@client.Id" class="btn btn-primary">Edit</a>
-                                <a asp-controller="Admin" class="btn btn-danger delete-client-btn" data-client-id="@client.Id">Delete</a>
+                                <a asp-area="Admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@client.Id"
+                                    class="btn btn-primary">Edit</a>
+                                <a asp-controller="Admin" class="btn btn-danger delete-client-btn"
+                                    data-client-id="@client.Id">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -103,5 +123,5 @@
             }
         });
     });
-
+   
 </script>
