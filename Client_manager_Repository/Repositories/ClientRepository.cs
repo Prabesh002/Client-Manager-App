@@ -17,9 +17,9 @@ namespace Client_Manager_Repository.Repositories
             _context = context;
         }
 
-        public async Task<List<ClientModel>> GetAllClientsAsync()
+        public async Task<IQueryable<ClientModel>> GetAllClientsQueryableAsync()
         {
-            return await _context.Clients.ToListAsync();
+            return await Task.FromResult(_context.Clients.AsQueryable());
         }
 
         public async Task<ClientModel> GetClientByIdAsync(int id)
@@ -92,40 +92,6 @@ namespace Client_Manager_Repository.Repositories
         public async Task<List<ClientModel>> GetClientsSortedByOldestUpdatedAsync()
         {
             return await _context.Clients.OrderBy(client => client.LastUpdated).ToListAsync();
-        }
-
-        public async Task<List<ClientModel>> GetClientsByCountryAsync(Country country)
-        {
-            return await _context.Clients.Where(c => c.Country == country).ToListAsync();
-        }
-
-        public async Task<List<ClientModel>> GetClientsByGenderAsync(Gender gender)
-        {
-            return await _context.Clients.Where(c => c.Gender == gender).ToListAsync();
-        }
-
-        public async Task<List<ClientModel>> GetClientsByEditingTypeAsync(string editingType)
-        {
-            return await _context.Clients.Where(c => c.EditingType == editingType).ToListAsync();
-        }
-
-        public async Task<List<ClientModel>> GetScammerClientsAsync()
-        {
-            return await _context.Clients.Where(c => c.IsScammer).ToListAsync();
-        }
-
-        public async Task<List<ClientModel>> GetClientsWithAgencyAsync()
-        {
-            return await _context.Clients.Where(c => c.HasAgency).ToListAsync();
-        }
-
-        public async Task<List<ClientModel>> GetClientsByPaymentTypeAsync(string paymentType)
-        {
-            return await _context.Clients.Where(c => c.PaymentType == paymentType).ToListAsync();
-        }
-        public async Task<List<ClientModel>> GetClientsByReWorkingRateAsync(string reWorkingRate)
-        {
-            return await _context.Clients.Where(c => c.ReWorkingRate == reWorkingRate).ToListAsync();
         }
     }
 }

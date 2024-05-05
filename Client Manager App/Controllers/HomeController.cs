@@ -31,7 +31,6 @@ namespace Client_Manager_App.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string searchTerm, string filterBy, string clientType, string sortBy, string countryFilter, string genderFilter, string editingTypeFilter, bool scammerFilter, bool hasAgencyFilter, string paymentTypeFilter)
         {
-            HashSet<ClientModel> hashedClients = new HashSet<ClientModel>();
             List<ClientModel> clients = new List<ClientModel>();
 
             if (!string.IsNullOrEmpty(clientType))
@@ -42,13 +41,17 @@ namespace Client_Manager_App.Controllers
                 }
                 else
                 {
-                    // Handle invalid client type
+                    // invalid client type
                     clients = new List<ClientModel>();
                 }
             }
+            else if(searchTerm != null && filterBy != null)
+            {
+                clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+            }
             else
             {
-                // Apply sorting if specified
+                // Apply sorting 
                 switch (sortBy)
                 {
                     case "timeEmailSentDesc":
@@ -78,105 +81,65 @@ namespace Client_Manager_App.Controllers
                         break;
                 }
 
-                // Check for filters and apply them
-                if (!string.IsNullOrEmpty(countryFilter) || !string.IsNullOrEmpty(genderFilter) || !string.IsNullOrEmpty(editingTypeFilter) || scammerFilter || hasAgencyFilter || !string.IsNullOrEmpty(paymentTypeFilter))
+               
+                try
                 {
-                    clients.Clear();
-                    try
+                    var query = await _clientRepository.GetAllClientsQueryableAsync();
+
+                    if (!string.IsNullOrEmpty(countryFilter))
                     {
                         if (Enum.TryParse(countryFilter, out Country country))
                         {
-                            var countryClients = await _clientRepository.GetClientsByCountryAsync(country);
-                            if (countryClients != null)
-                            {
-                                hashedClients.UnionWith(countryClients);
-                            }
-                            else
-                            {
-                                TempData["Error"] = $"No clients found for the selected country.";
-                            }
+                            query = query.Where(c => c.Country == country);
                         }
                         else
                         {
                             TempData["Error"] = $"Invalid country filter: {countryFilter}";
+                            return View(new List<ClientModel>());
                         }
+                    }
 
+                    if (!string.IsNullOrEmpty(genderFilter))
+                    {
                         if (Enum.TryParse(genderFilter, out Gender gender))
                         {
-                            var genderClients = await _clientRepository.GetClientsByGenderAsync(gender);
-                            if (genderClients != null)
-                            {
-                                hashedClients.UnionWith(genderClients);
-                            }
-                            else
-                            {
-                                TempData["Error"] = $"No clients found for the selected gender.";
-                            }
+                            query = query.Where(c => c.Gender == gender);
                         }
                         else
                         {
                             TempData["Error"] = $"Invalid gender filter: {genderFilter}";
+                            return View(new List<ClientModel>());
                         }
-
-                        if (!string.IsNullOrEmpty(editingTypeFilter))
-                        {
-                            var editingTypeClients = await _clientRepository.GetClientsByEditingTypeAsync(editingTypeFilter);
-                            if (editingTypeClients != null)
-                            {
-                                hashedClients.UnionWith(editingTypeClients);
-                            }
-                            else
-                            {
-                                TempData["Error"] = $"No clients found for the selected editing type.";
-                            }
-                        }
-
-                        if (scammerFilter)
-                        {
-                            var scammerClients = await _clientRepository.GetScammerClientsAsync();
-                            if (scammerClients != null)
-                            {
-                                hashedClients.UnionWith(scammerClients);
-                            }
-                            else
-                            {
-                                TempData["Error"] = $"No scammer clients found.";
-                            }
-                        }
-
-                        if (hasAgencyFilter)
-                        {
-                            var agencyClients = await _clientRepository.GetClientsWithAgencyAsync();
-                            if (agencyClients != null)
-                            {
-                                hashedClients.UnionWith(agencyClients);
-                            }
-                            else
-                            {
-                                TempData["Error"] = $"No clients with agency found.";
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(paymentTypeFilter))
-                        {
-                            var paymentTypeClients = await _clientRepository.GetClientsByPaymentTypeAsync(paymentTypeFilter);
-                            if (paymentTypeClients != null)
-                            {
-                                hashedClients.UnionWith(paymentTypeClients);
-                            }
-                            else
-                            {
-                                TempData["Error"] = $"No clients found for the selected payment type.";
-                            }
-                        }
-
-                        clients.AddRange(hashedClients); // Convert HashSet to List
                     }
-                    catch (Exception ex)
+
+                    if (!string.IsNullOrEmpty(editingTypeFilter))
                     {
-                        Console.Write(ex.ToString());
-                        TempData["Error"] = $"An error occurred while applying filters: {ex.Message}";
+                        query = query.Where(c => c.EditingType == editingTypeFilter);
                     }
+
+                    if (scammerFilter)
+                    {
+                        query = query.Where(c => c.IsScammer);
+                    }
+
+                    if (hasAgencyFilter)
+                    {
+                        query = query.Where(c => c.HasAgency);
+                    }
+
+                    if (!string.IsNullOrEmpty(paymentTypeFilter))
+                    {
+                        query = query.Where(c => c.PaymentType == paymentTypeFilter);
+                    }
+
+                 
+
+                    clients =  query.ToList();
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.ToString());
+                    TempData["Error"] = $"An error occurred while applying filters: {ex.Message}";
                 }
             }
 
