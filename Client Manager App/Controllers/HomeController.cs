@@ -32,7 +32,7 @@ namespace Client_Manager_App.Controllers
         public async Task<IActionResult> Index(string searchTerm, string filterBy, string clientType, string sortBy, string countryFilter, string genderFilter, string editingTypeFilter, bool scammerFilter, bool hasAgencyFilter, string paymentTypeFilter)
         {
             List<ClientModel> clients = new List<ClientModel>();
-
+            var query = await _clientRepository.GetAllClientsQueryableAsync();
             if (!string.IsNullOrEmpty(clientType))
             {
                 if (Enum.TryParse(clientType, out ClientType type))
@@ -45,47 +45,38 @@ namespace Client_Manager_App.Controllers
                     clients = new List<ClientModel>();
                 }
             }
-            else if(searchTerm != null && filterBy != null)
+            else if (searchTerm != null && filterBy != null)
             {
                 clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
             }
             else
             {
-                // Apply sorting 
                 switch (sortBy)
                 {
                     case "timeEmailSentDesc":
-                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
-                        clients = clients.OrderByDescending(c => c.TimeEmailSent).ToList();
+                        query = query.OrderByDescending(client => client.TimeEmailSent);
                         break;
                     case "timeEmailSentAsc":
-                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
-                        clients = clients.OrderBy(c => c.TimeEmailSent).ToList();
+                        query = query.OrderBy(client => client.TimeEmailSent);
                         break;
                     case "maxOfferAsc":
-                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
-                        clients = clients.OrderBy(c => c.MaxOffer).ToList();
+                        query = query.OrderBy(client => client.MaxOffer);
                         break;
                     case "maxOfferDesc":
-                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
-                        clients = clients.OrderByDescending(c => c.MaxOffer).ToList();
+                        query = query.OrderByDescending(client => client.MaxOffer);
                         break;
                     case "newestUpdated":
-                        clients = await _clientRepository.GetClientsSortedByNewestUpdatedAsync();
+                        query = query.OrderByDescending(client => client.LastUpdated);
                         break;
                     case "oldestUpdated":
-                        clients = await _clientRepository.GetClientsSortedByOldestUpdatedAsync();
-                        break;
-                    default:
-                        clients = await _clientRepository.GetFilteredClientsAsync(searchTerm, filterBy);
+                        query = query.OrderBy(client => client.LastUpdated);
                         break;
                 }
 
-               
+
+
                 try
                 {
-                    var query = await _clientRepository.GetAllClientsQueryableAsync();
-
                     if (!string.IsNullOrEmpty(countryFilter))
                     {
                         if (Enum.TryParse(countryFilter, out Country country))
@@ -132,9 +123,9 @@ namespace Client_Manager_App.Controllers
                         query = query.Where(c => c.PaymentType == paymentTypeFilter);
                     }
 
-                 
+                    clients = query.ToList();
 
-                    clients =  query.ToList();
+
                 }
                 catch (Exception ex)
                 {
