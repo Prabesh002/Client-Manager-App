@@ -1,10 +1,12 @@
 ﻿using Client_Manager_App_Database.AppDb;
 using Client_Manager_App_Models;
 using Client_manager_Repository.Interfaces;
+using Ganss.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml;
+using System.Data.Entity;
 using System.Globalization;
+using System.Reflection;
 
 namespace Client_Manager_App.Areas.Admin.Controllers
 {
@@ -117,202 +119,40 @@ namespace Client_Manager_App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             if (file == null || file.Length == 0)
-            {
-                TempData["Success"] = "Please select a file to upload.";
-                return RedirectToAction("Client");
-            }
+                return BadRequest("No file was uploaded.");
 
-            try
+            using (var stream = new MemoryStream())
             {
-                using (var stream = new MemoryStream())
+                try
                 {
                     await file.CopyToAsync(stream);
                     stream.Position = 0;
 
-                    using (var package = new ExcelPackage(stream))
+                    var mapper = new ExcelMapper();
+
+                    string tempFilePath = Path.GetTempFileName();
+                    using (var fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                       
-
-
-                        if (worksheet == null)
-                        {
-                            TempData["Success"] = "No worksheet found in the uploaded Excel file.";
-                            return RedirectToAction("Client");
-                        }
-
-                        int rows = worksheet.Dimension.Rows;
-                        int columns = worksheet.Dimension.Columns;
-
-                        using (var transaction = _context.Database.BeginTransaction())
-                        {
-                            for (int row = 2; row <= rows; row++) // the first row contains headers
-                            {
-                                ClientModel client = new ClientModel();
-                                bool isValid = true;
-
-                                for (int col = 1; col <= columns; col++)
-                                {
-                                    string value = worksheet.Cells[row, col].Value?.ToString();
-                                    if (value != null)
-                                    {
-                                        switch (col)
-                                        {
-                                            case 1: 
-                                                client.Name = value;
-                                                break;
-                                            case 2: 
-                                                client.Email = value;
-                                                break;
-                                            case 3: 
-                                                client.PlatformUrl = value;
-                                                break;
-                                            case 4:
-                                                if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
-                                                {
-                                                    client.TimeEmailSent = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
-                                                }
-                                                else
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 5:
-                                                
-                                                if (string.IsNullOrWhiteSpace(value)) 
-                                                {
-                                                    client.IsRejected = false;
-                                                }
-                                                else if (bool.TryParse(value, out bool reject))
-                                                {
-                                                    client.IsRejected = reject;
-                                                }
-                                                else 
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 6: 
-                                                client.MaxOffer = value;
-                                                break;
-                                            case 7: 
-                                                if (Enum.TryParse(value, out ClientType clientType))
-                                                {
-                                                    client.ClientType = clientType;
-                                                }
-                                                else
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 8: 
-                                                if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime lastUpdated))
-                                                {
-                                                    client.LastUpdated = DateTime.SpecifyKind(lastUpdated, DateTimeKind.Utc);
-                                                }
-                                                else
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 9: 
-                                                client.ReWorkingRate = value;
-                                                break;
-                                            case 10: 
-                                                if (Enum.TryParse(value, out Gender gender))
-                                                {
-                                                    client.Gender = gender;
-                                                }
-                                                else
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 11: 
-                                                if (Enum.TryParse(value, out Country country))
-                                                {
-                                                    client.Country = country;
-                                                }
-                                                else
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 12: 
-                                                client.EditingType = value;
-                                                break;
-                                            case 13:
-                                                if (string.IsNullOrWhiteSpace(value)) // If value is empty or whitespace, default to false
-                                                {
-                                                    client.IsScammer = false;
-                                                }
-                                                else if (bool.TryParse(value, out bool isScammer)) // Otherwise, try parsing the value
-                                                {
-                                                    client.IsScammer = isScammer;
-                                                }
-                                                else // Parsing failed
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-                                            case 14:
-                                                if (string.IsNullOrWhiteSpace(value)) // If value is empty or whitespace, default to false
-                                                {
-                                                    client.HasAgency = false;
-                                                }
-                                                else if (bool.TryParse(value, out bool hasAgency)) // Otherwise, try parsing the value
-                                                {
-                                                    client.HasAgency = hasAgency;
-                                                }
-                                                else // Parsing failed
-                                                {
-                                                    isValid = false;
-                                                }
-                                                break;
-
-                                            case 15: 
-                                                client.PaymentType = value;
-                                                break;
-                                            default:
-                                                break;
-                                        }
-
-                                    }
-                                    else if (col == 1 || col == 2) // Check for required fields
-                                    {
-                                        isValid = false;
-                                    }
-                                }
-
-                                if (isValid)
-                                {
-                                    _context.Clients.Add(client);
-                                }
-                                else
-                                {
-                                    TempData["Success"] = $"Error in row {row}: Required fields are missing or date format is invalid.";
-                                    return RedirectToAction("Client");
-                                }
-                            }
-
-                            await _context.SaveChangesAsync();
-                            transaction.Commit();
-                        }
+                        stream.CopyTo(fileStream);
                     }
+                    var clientModels = mapper.Fetch<ClientModel>(tempFilePath).ToList();
+
+                    System.IO.File.Delete(tempFilePath);
+                    _context.Clients.AddRange(clientModels);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Sucessfully added all the entries";
                 }
-
-                TempData["Success"] = "Data uploaded successfully!";
-                return RedirectToAction("Client");
-            }
-            catch (Exception ex)
-            {
-                TempData["Success"] = $"An error occurred: {ex.Message}";
-                return RedirectToAction("Client");
+                catch (Exception ex) 
+                {
+                    TempData["Success"] = $" Error! \n  {ex.Message}";
+                }
             }
 
-
+            return Ok();
         }
+
+
+
     }
 }

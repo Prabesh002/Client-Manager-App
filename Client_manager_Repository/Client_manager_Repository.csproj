@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ExcelMapper" Version="5.2.581" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Client-Manager-App-Models\Client_Manager_App_Models.csproj" />
     <ProjectReference Include="..\Client_Manager_App_Database\Client_Manager_App_Database.csproj" />
   </ItemGroup>
