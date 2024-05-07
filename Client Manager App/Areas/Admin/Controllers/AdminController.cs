@@ -1,7 +1,6 @@
 ﻿using Client_Manager_App_Database.AppDb;
 using Client_Manager_App_Models;
 using Client_manager_Repository.Interfaces;
-using Ganss.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Entity;
@@ -115,43 +114,12 @@ namespace Client_Manager_App.Areas.Admin.Controllers
             TempData["Success"] = $"{client.Name} was removed";
             return RedirectToAction("Client");
         }
-
         [HttpPost]
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file was uploaded.");
-
-            using (var stream = new MemoryStream())
-            {
-                try
-                {
-                    await file.CopyToAsync(stream);
-                    stream.Position = 0;
-
-                    var mapper = new ExcelMapper();
-
-                    string tempFilePath = Path.GetTempFileName();
-                    using (var fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
-                    {
-                        stream.CopyTo(fileStream);
-                    }
-                    var clientModels = mapper.Fetch<ClientModel>(tempFilePath).ToList();
-
-                    System.IO.File.Delete(tempFilePath);
-                    _context.Clients.AddRange(clientModels);
-                    await _context.SaveChangesAsync();
-                    TempData["Success"] = "Sucessfully added all the entries";
-                }
-                catch (Exception ex) 
-                {
-                    TempData["Success"] = $" Error! \n  {ex.Message}";
-                }
-            }
-
-            return Ok();
+          
+            return RedirectToAction("Client");
         }
-
 
 
     }
