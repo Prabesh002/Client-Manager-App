@@ -115,6 +115,38 @@ namespace Client_Manager_App.Areas.Admin.Controllers
             TempData["Success"] = $"{client.Name} was removed";
             return RedirectToAction("Client");
         }
+
+        public IActionResult OpenDelete()
+        {
+            var client = _context.Clients.ToList();
+            return PartialView("_DeletePartial", client);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteMultiple(List<int> selectedClients)
+        {
+            if (selectedClients == null || selectedClients.Count == 0)
+            {
+                TempData["Error"] = "No clients selected for deletion.";
+                return RedirectToAction("Client");
+            }
+
+            foreach (var clientId in selectedClients)
+            {
+                var client = _context.Clients.Find(clientId);
+                if (client != null)
+                {
+                    _context.Clients.Remove(client);
+                }
+            }
+
+            _context.SaveChanges();
+
+            TempData["Success"] = "Selected clients were removed";
+            return RedirectToAction("Client");
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {

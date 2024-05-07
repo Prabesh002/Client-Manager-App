@@ -1,0 +1,43 @@
+﻿@model List<Client_Manager_App_Models.ClientModel>
+
+<form id="deleteClientsForm">
+    <div class="modal-body">
+        <p>Are you sure you want to delete these clients?</p>
+        <ul>
+            @foreach (var client in Model)
+            {
+                <li class="text-black">
+                    <input type="checkbox" name="selectedClients" value="@client.Id" />
+                    @client.Name
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="modal-footer">
+       
+        <button type="button" class="btn btn-danger" onclick="deleteSelectedClients()">Delete</button>
+    </div>
+</form>
+
+<script>
+    function deleteSelectedClients() {
+        var selectedClientIds = [];
+        $('input[name="selectedClients"]:checked').each(function () {
+            selectedClientIds.push($(this).val());
+        });
+
+        // Send AJAX request to delete selected clients
+        $.ajax({
+            url: '@Url.Action("DeleteMultiple", "Admin")',
+            type: 'POST',
+            data: { selectedClients: selectedClientIds },
+            success: function (data) {
+                // Handle success response if needed
+                location.reload(); // Refresh the page after deletion
+            },
+            error: function (xhr, status, error) {
+                // Handle error response if needed
+            }
+        });
+    }
+</script>
