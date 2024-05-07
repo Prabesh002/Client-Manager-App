@@ -148,7 +148,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
 
                         using (var transaction = _context.Database.BeginTransaction())
                         {
-                            for (int row = 2; row <= rows; row++) // Assuming the first row contains headers
+                            for (int row = 2; row <= rows; row++) // the first row contains headers
                             {
                                 ClientModel client = new ClientModel();
                                 bool isValid = true;
