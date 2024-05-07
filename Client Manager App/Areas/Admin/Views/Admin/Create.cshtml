@@ -4,6 +4,8 @@
     ViewData["Title"] = "Create Client";
 }
 
+
+
 <div class="container">
 
     <div class="row">
@@ -118,4 +120,12 @@
             </form>
         </div>
     </div>
+
+    <form asp-action="UploadExcel" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file">Select Excel File:</label>
+            <input type="file" name="file" id="file" class="form-control-file" accept=".xlsx,.xls">
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
 </div>
