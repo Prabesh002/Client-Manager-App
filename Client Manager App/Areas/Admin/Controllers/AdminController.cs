@@ -1,12 +1,13 @@
 ﻿using Client_Manager_App_Database.AppDb;
 using Client_Manager_App_Models;
 using Client_manager_Repository.Interfaces;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Entity;
 using System.Globalization;
 using System.Reflection;
-
+using System.IO;
 namespace Client_Manager_App.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -117,9 +118,92 @@ namespace Client_Manager_App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {
-          
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            try
+            {
+                if (file != null && file.Length > 0)
+                {
+                    var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\folders";
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    var filePath = Path.Combine(uploadsFolder, file.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            var clients = new List<ClientModel>();
+
+                            while (reader.Read())
+                            {
+                                ClientModel cm = new ClientModel();
+                                cm.Name = reader.GetValue(0)?.ToString() ?? "N/D";
+                                cm.Email = reader.GetValue(1)?.ToString() ?? "N/D";
+                                cm.PlatformUrl = reader.GetValue(2)?.ToString() ?? "N/D";
+                                cm.MaxOffer = reader.GetValue(5)?.ToString() ?? "N/D";
+                                cm.ReWorkingRate = reader.GetValue(8)?.ToString() ?? "N/D";
+                                cm.EditingType = reader.GetValue(11)?.ToString() ?? "N/D";
+                                cm.PaymentType = reader.GetValue(14)?.ToString() ?? "N/D";
+
+                                // Parsing bools
+                                bool.TryParse(reader.GetValue(4)?.ToString(), out var isRejected);
+                                cm.IsRejected = isRejected;
+
+                                bool.TryParse(reader.GetValue(12)?.ToString(), out var isScammer);
+                                cm.IsScammer = isScammer;
+
+                                bool.TryParse(reader.GetValue(13)?.ToString(), out var hasAgency);
+                                cm.HasAgency = hasAgency;
+
+                                // Parsing enums
+                                Enum.TryParse<ClientType>(reader.GetValue(6)?.ToString(), out var clientType);
+                                cm.ClientType = clientType != null ? clientType : ClientType.empty;
+
+                                Enum.TryParse<Gender>(reader.GetValue(9)?.ToString(), out var gender);
+                                cm.Gender = gender != null ? gender : Gender.NotDisclosed;
+
+                                Enum.TryParse<Country>(reader.GetValue(10)?.ToString(), out var country);
+                                cm.Country = country != null ? country : Country.USA;
+
+
+                                // Setting default values for date and time if null
+                                DateTime.TryParse(reader.GetValue(3)?.ToString(), out var timeEmailSent);
+                                cm.TimeEmailSent = timeEmailSent != DateTime.MinValue ? timeEmailSent : DateTime.Now;
+
+                                DateTime.TryParse(reader.GetValue(7)?.ToString(), out var lastUpdated);
+                                cm.LastUpdated = lastUpdated != DateTime.MinValue ? lastUpdated : DateTime.Now;
+                                cm.TimeEmailSent =  cm.TimeEmailSent.ToUniversalTime();
+                                cm.LastUpdated = cm.LastUpdated.ToUniversalTime();
+                                clients.Add(cm);
+                            }
+                            _context.Clients.AddRange(clients);
+                            _context.SaveChanges();
+
+                            TempData["Success"] = "File uploaded successfully.";
+                        }
+                    }
+                }
+                else
+                {
+                    TempData["Success"] = "No file selected.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Success"] = $"Error uploading file: {ex.Message}";
+            }
+
             return RedirectToAction("Client");
         }
+
+
 
 
     }
