@@ -179,12 +179,17 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                                     isValid = false;
                                                 }
                                                 break;
-                                            case 5: 
-                                                if (bool.TryParse(value, out bool isRejected))
+                                            case 5:
+                                                
+                                                if (string.IsNullOrWhiteSpace(value)) 
                                                 {
-                                                    client.IsRejected = isRejected;
+                                                    client.IsRejected = false;
                                                 }
-                                                else
+                                                else if (bool.TryParse(value, out bool reject))
+                                                {
+                                                    client.IsRejected = reject;
+                                                }
+                                                else 
                                                 {
                                                     isValid = false;
                                                 }
