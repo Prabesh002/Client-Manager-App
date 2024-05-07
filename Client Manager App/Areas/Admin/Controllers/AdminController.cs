@@ -146,7 +146,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                 ClientModel cm = new ClientModel();
                                 cm.Name = reader.GetValue(0)?.ToString() ?? "N/D";
                                 cm.Email = reader.GetValue(1)?.ToString() ?? "N/D";
-                                cm.PlatformUrl = reader.GetValue(2)?.ToString() ?? "N/D";
+                                cm.PlatformUrl = reader.GetValue(2)?.ToString() ?? string.Empty;
                                 cm.MaxOffer = reader.GetValue(5)?.ToString() ?? "N/D";
                                 cm.ReWorkingRate = reader.GetValue(8)?.ToString() ?? "N/D";
                                 cm.EditingType = reader.GetValue(11)?.ToString() ?? "N/D";
