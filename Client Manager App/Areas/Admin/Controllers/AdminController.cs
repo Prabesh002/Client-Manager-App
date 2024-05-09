@@ -176,11 +176,11 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                             while (reader.Read())
                             {
                                 ClientModel cm = new ClientModel();
-                                cm.Name = reader.GetValue(0)?.ToString() ?? "N/D";
+                                cm.Name = reader.GetValue(0)?.ToString() ?? "Null User";
                                 cm.Email = reader.GetValue(1)?.ToString() ?? "N/D";
                                 cm.PlatformUrl = reader.GetValue(2)?.ToString() ?? string.Empty;
-                                cm.MaxOffer = reader.GetValue(5)?.ToString() ?? "N/D";
-                                cm.ReWorkingRate = reader.GetValue(8)?.ToString() ?? "N/D";
+                                cm.MaxOffer = reader.GetValue(5)?.ToString() ?? "0";
+                                cm.ReWorkingRate = reader.GetValue(8)?.ToString() ?? "0";
                                 cm.EditingType = reader.GetValue(11)?.ToString() ?? "N/D";
                                 cm.PaymentType = reader.GetValue(14)?.ToString() ?? "N/D";
 
