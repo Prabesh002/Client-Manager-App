@@ -25,18 +25,14 @@ namespace Client_Manager_App.Areas.Admin.Controllers
         {
             List<ClientModel> clients;
 
-            // Check if client type filter is selected
             if (!string.IsNullOrEmpty(clientType))
             {
-                // Convert client type string to enum
                 if (Enum.TryParse(clientType, out ClientType type))
                 {
-                    // Filter clients by client type
                     clients = await _clientRepository.GetClientsByTypeAsync(type);
                 }
                 else
                 {
-                    // Handle invalid client type
                     clients = new List<ClientModel>();
                 }
             }
@@ -184,7 +180,6 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                 cm.EditingType = reader.GetValue(11)?.ToString() ?? "N/D";
                                 cm.PaymentType = reader.GetValue(14)?.ToString() ?? "N/D";
 
-                                // Parsing bools
                                 bool.TryParse(reader.GetValue(4)?.ToString(), out var isRejected);
                                 cm.IsRejected = isRejected;
 
@@ -194,7 +189,6 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                 bool.TryParse(reader.GetValue(13)?.ToString(), out var hasAgency);
                                 cm.HasAgency = hasAgency;
 
-                                // Parsing enums
                                 Enum.TryParse<ClientType>(reader.GetValue(6)?.ToString(), out var clientType);
                                 cm.ClientType = clientType != null ? clientType : ClientType.empty;
 
@@ -204,8 +198,6 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                 Enum.TryParse<Country>(reader.GetValue(10)?.ToString(), out var country);
                                 cm.Country = country != null ? country : Country.USA;
 
-
-                                // Setting default values for date and time if null
                                 DateTime.TryParse(reader.GetValue(3)?.ToString(), out var timeEmailSent);
                                 cm.TimeEmailSent = timeEmailSent != DateTime.MinValue ? timeEmailSent : DateTime.Now;
 
@@ -234,9 +226,6 @@ namespace Client_Manager_App.Areas.Admin.Controllers
 
             return RedirectToAction("Client");
         }
-
-
-
 
     }
 }
