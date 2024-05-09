@@ -204,8 +204,6 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                 Enum.TryParse<Country>(reader.GetValue(10)?.ToString(), out var country);
                                 cm.Country = country != null ? country : Country.USA;
 
-
-                                // Setting default values for date and time if null
                                 DateTime.TryParse(reader.GetValue(3)?.ToString(), out var timeEmailSent);
                                 cm.TimeEmailSent = timeEmailSent != DateTime.MinValue ? timeEmailSent : DateTime.Now;
 
