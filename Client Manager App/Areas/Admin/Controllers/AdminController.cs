@@ -194,7 +194,7 @@ namespace Client_Manager_App.Areas.Admin.Controllers
                                 bool.TryParse(reader.GetValue(13)?.ToString(), out var hasAgency);
                                 cm.HasAgency = hasAgency;
 
-                                // Parsing enums
+                             
                                 Enum.TryParse<ClientType>(reader.GetValue(6)?.ToString(), out var clientType);
                                 cm.ClientType = clientType != null ? clientType : ClientType.empty;
 
